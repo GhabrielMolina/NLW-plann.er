@@ -3,8 +3,13 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod"; // validation library
 import { prisma } from "../lib/prisma";
 import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import "dayjs/locale/pt-br"; // import the locale for dayjs
 import nodemailer from "nodemailer";
 import { getMailClient } from "../lib/mail";
+
+dayjs.locale("pt-br"); // set the locale for dayjs
+dayjs.extend(localizedFormat); // extend dayjs with localizedFormat plugin
 
 export async function createTrip(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -66,19 +71,36 @@ export async function createTrip(app: FastifyInstance) {
         },
       });
 
+      const formattedStartDate = dayjs(starts_at).format("LL");
+      const formattedEndDate = dayjs(ends_at).format("LL");
+
+      const confirmationLink = `http://localhost:3333/trips/${trip.id}/confirm`;
+
       // send an email to the owner of the trip with the information
       const mail = await getMailClient();
       const message = await mail.sendMail({
         from: {
-          name: "Trip Planner",
+          name: "Equipe Trip Planner",
           address: "dev@plann.er",
         },
         to: {
           name: owner_name,
           address: owner_email,
         },
-        subject: "Trip Created",
-        html: `Your trip to ${destination} has been created!`,
+        subject: `Confirme sua viagem para ${destination} em ${formattedStartDate}`,
+        html: `
+        <div style="font-family: sans-serif; font-size: 16px; line-height: 1.6;">
+          <p>Você solicitou a criação de uma viagem para <strong>${destination}</strong> nas datas de <strong>${formattedStartDate}</strong> até <strong>${formattedEndDate}</strong>.</p>
+          <p></p>
+          <p>Para confirmar sua viagem, clique no link abaixo:</p>
+          <p></p>
+          <p>
+            <a href=${confirmationLink}>Confirmar viagem</a>
+          </p>
+          <p></p>
+          <p>Caso você não saiba do que se trata esse e-mail, apenas ignore esse e-mail.</p>
+        </div>
+        `.trim(),
       });
 
       console.log(nodemailer.getTestMessageUrl(message)); // log the email url to see the email sent
