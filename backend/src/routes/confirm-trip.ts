@@ -58,15 +58,15 @@ export async function confirmTrip(app: FastifyInstance) {
       const mail = await getMailClient();
 
       await Promise.all([
-        trip.participants.map(async (participants) => {
-          const confirmationLink = `http://localhost:3333/participants/${participants.id}/confirm`;
+        trip.participants.map(async (participant) => {
+          const confirmationLink = `http://localhost:3333/participants/${participant.id}/confirm`;
 
           const message = await mail.sendMail({
             from: {
               name: "Equipe Trip Planner",
               address: "dev@plann.er",
             },
-            to: participants.email,
+            to: participant.email,
             subject: `Confirme sua presença na viagem para ${trip.destination} em ${formattedStartDate}`,
             html: `
             <div style="font-family: sans-serif; font-size: 16px; line-height: 1.6;">
