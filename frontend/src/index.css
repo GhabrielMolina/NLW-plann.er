@@ -5,3 +5,8 @@
 * {
   min-width: 0;
 }
+
+input {
+  color-scheme: dark; 
+}
+/*  color-scheme: dark; It is for changing the theme in the icon that appears when we type an input */
