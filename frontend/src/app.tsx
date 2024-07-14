@@ -1,6 +1,23 @@
-import { MapPin, Calendar, ArrowRight } from "lucide-react";
+import {
+  MapPin,
+  Calendar,
+  ArrowRight,
+  UserRoundPlus,
+  Settings2,
+} from "lucide-react";
+import { useState } from "react";
 
 export function App() {
+  const [isGuestsInputOpen, setIsGuestsInputOpen] = useState(false);
+
+  function openGuestsInput() {
+    setIsGuestsInputOpen(true);
+  }
+
+  function closeGuestsInput() {
+    setIsGuestsInputOpen(false);
+  }
+
   return (
     // {/* h-screen Occupies 100% of the div  */}
     <div className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
@@ -12,29 +29,65 @@ export function App() {
           </p>
         </div>
 
-        <div className="h-16 bg-zinc-900 px-4 rounded-xl flex items-center shadow-shape gap-3">
-          {/* flex-1 Try to occupy as much space as possible within the div */}
-          <div className="flex items-center gap-2 flex-1">
-            <MapPin className="size-5 text-zinc-400" />
-            <input
-              type="text"
-              placeholder="Para onde você vai?"
-              className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
-            />
+        <div className="space-y-4">
+          <div className="h-16 bg-zinc-900 px-4 rounded-xl flex items-center shadow-shape gap-3">
+            {/* flex-1 Try to occupy as much space as possible within the div */}
+            <div className="flex items-center gap-2 flex-1">
+              <MapPin className="size-5 text-zinc-400" />
+              <input
+                disabled={isGuestsInputOpen}
+                type="text"
+                placeholder="Para onde você vai?"
+                className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="size-5 text-zinc-400" />
+              <input
+                disabled={isGuestsInputOpen}
+                type="text"
+                placeholder="Quando?"
+                className="bg-transparent text-lg placeholder-zinc-400 w-40 outline-none"
+              />
+            </div>
+            <div className="w-px h-6 bg-zinc-800" /> {/* Vertical line */}
+            {isGuestsInputOpen ? (
+              <button
+                onClick={closeGuestsInput}
+                className="bg-zinc-800 text-zinc-200 rounded-lg font-medium px-5 py-2 flex items-center gap-2 hover:bg-zinc-700"
+              >
+                Alterar local/data
+                <Settings2 className="size-5" />
+              </button>
+            ) : (
+              <button
+                onClick={openGuestsInput}
+                className="bg-lime-300 text-lime-950 rounded-lg font-medium px-5 py-2 flex items-center gap-2 hover:bg-lime-400"
+              >
+                Continuar
+                <ArrowRight className="size-5" />
+              </button>
+            )}
           </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="size-5 text-zinc-400" />
-            <input
-              type="text"
-              placeholder="Quando?"
-              className="bg-transparent text-lg placeholder-zinc-400 w-40 outline-none"
-            />
-          </div>
-          <div className="w-px h-6 bg-zinc-800" /> {/* Vertical line */}
-          <button className="bg-lime-300 text-lime-950 rounded-lg font-medium px-5 py-2 flex items-center gap-2 hover:">
-            Continuar
-            <ArrowRight className="size-5" />
-          </button>
+
+          {isGuestsInputOpen && (
+            <div className="h-16 bg-zinc-900 px-4 rounded-xl flex items-center shadow-shape gap-3">
+              {/* flex-1 Try to occupy as much space as possible within the div */}
+              <div className="flex items-center gap-2 flex-1">
+                <UserRoundPlus className="size-5 text-zinc-400" />
+                <input
+                  type="text"
+                  placeholder="Quem estará na viagem?"
+                  className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                />
+              </div>
+              <div className="w-px h-6 bg-zinc-800" /> {/* Vertical line */}
+              <button className="bg-lime-300 text-lime-950 rounded-lg font-medium px-5 py-2 flex items-center gap-2 hover:bg-lime-400">
+                Confirmar viagem
+                <ArrowRight className="size-5" />
+              </button>
+            </div>
+          )}
         </div>
 
         <p className="text-sm text-zinc-500">
