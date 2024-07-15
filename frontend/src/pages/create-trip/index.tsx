@@ -4,6 +4,7 @@ import { DestinationAndDateStep } from "./_components/_steps/destination-and-dat
 import { InviteGuestStep } from "./_components/_steps/invite-guests-step.tsx";
 import { ConfirmTripModal } from "./_components/confirm-trip-modal.tsx";
 import { InviteGuestsModal } from "./_components/invite-guests-modal.tsx";
+import { DateRange } from "react-day-picker";
 
 export function CreateTripPage() {
   const navigate = useNavigate();
@@ -11,6 +12,14 @@ export function CreateTripPage() {
   const [isGuestsInputOpen, setIsGuestsInputOpen] = useState(false);
   const [isGuestsModalOpen, setIsGuestsModalOpen] = useState(false);
   const [isConfirmTripModalOpen, setIsConfirmTripModalOpen] = useState(false);
+
+  // gather information
+  const [destination, setDestination] = useState("");
+  const [ownerName, setOwnerName] = useState("");
+  const [ownerEmail, setOwnerEmail] = useState("");
+  const [eventStartAndEndDates, setEventStartAndEndDates] = useState<
+    DateRange | undefined
+  >();
 
   const [emailsToInvite, setEmailsToInvite] = useState([
     "ghabrielmolina@hotmail.com",
@@ -87,6 +96,9 @@ export function CreateTripPage() {
             closeGuestsInput={closeGuestsInput}
             isGuestsInputOpen={isGuestsInputOpen}
             openGuestsInput={openGuestsInput}
+            setDestination={setDestination}
+            eventStartAndEndDates={eventStartAndEndDates}
+            setEventStartAndEndDates={setEventStartAndEndDates}
           />
 
           {isGuestsInputOpen && (
@@ -125,6 +137,8 @@ export function CreateTripPage() {
         <ConfirmTripModal
           closeConfirmTripModal={closeConfirmTripModal}
           createTrip={createTrip}
+          setOwnerName={setOwnerName}
+          setOwnerEmail={setOwnerEmail}
         />
       )}
     </div>

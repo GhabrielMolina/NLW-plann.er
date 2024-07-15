@@ -9,17 +9,20 @@ interface DestinationAndDateStepProps {
   isGuestsInputOpen: boolean;
   openGuestsInput: () => void;
   closeGuestsInput: () => void;
+  setDestination: (destination: string) => void;
+  setEventStartAndEndDates: (dates: DateRange | undefined) => void; // DOCS https://daypicker.dev/start
+  eventStartAndEndDates: DateRange | undefined;
 }
 
 export function DestinationAndDateStep({
   isGuestsInputOpen,
   openGuestsInput,
   closeGuestsInput,
+  setDestination,
+  setEventStartAndEndDates,
+  eventStartAndEndDates,
 }: DestinationAndDateStepProps) {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const [eventStartAndEndDates, setEventStartAndEndDates] = useState<
-    DateRange | undefined
-  >(); // DOCS https://daypicker.dev/start
 
   function openDatePicker() {
     setIsDatePickerOpen(true);
@@ -29,11 +32,14 @@ export function DestinationAndDateStep({
     setIsDatePickerOpen(false);
   }
 
-
   // Show date in span field
   const displayedDate =
-    eventStartAndEndDates && eventStartAndEndDates.from && eventStartAndEndDates.to
-      ? format(eventStartAndEndDates.from, "d'  de  'LLL").concat(' até ').concat(format(eventStartAndEndDates.to, "d'  de  'LLL"))
+    eventStartAndEndDates &&
+    eventStartAndEndDates.from &&
+    eventStartAndEndDates.to
+      ? format(eventStartAndEndDates.from, "d'  de  'LLL")
+          .concat(" até ")
+          .concat(format(eventStartAndEndDates.to, "d'  de  'LLL"))
       : null;
 
   return (
@@ -46,6 +52,7 @@ export function DestinationAndDateStep({
           type="text"
           placeholder="Para onde você vai?"
           className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+          onChange={(event) => setDestination(event.target.value)}
         />
       </div>
       <button
