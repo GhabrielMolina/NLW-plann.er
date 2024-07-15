@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "../../../_components/button";
 import { api } from "../../../lib/axios";
+import { ConfirmGuestsModal } from "./confirm-guests-modal";
 
 interface Participant {
   id: string;
@@ -14,6 +15,16 @@ interface Participant {
 export function Guests() {
   const { tripId } = useParams(); // returns parameters that exist in the URL
   const [participants, setParticipants] = useState<Participant[]>();
+  const [isConfirmGuestsModalOpen, setIsConfirmGuestsModalOpen] = useState(false);
+
+  function openConfirmGuestsModalOpen() {
+    setIsConfirmGuestsModalOpen(true);
+  }
+
+  function closeConfirmGuestsModalOpen() {
+    setIsConfirmGuestsModalOpen(false);
+  }
+
 
   // useEffect controls when something will execute upon state change [''], so as not to render repeatedly
   useEffect(() => {
@@ -55,10 +66,14 @@ export function Guests() {
           })}
         </div>
 
-        <Button variant="secondary" size="full">
+        <Button onClick={openConfirmGuestsModalOpen} variant="secondary" size="full">
           <UserCog className="size-5" />
           Gerenciar convidados
         </Button>
+
+        {isConfirmGuestsModalOpen && (
+          <ConfirmGuestsModal closeConfirmGuestsModalOpen={closeConfirmGuestsModalOpen} />
+        )}
       </div>
     </div>
   );
